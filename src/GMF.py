@@ -88,7 +88,7 @@ def get_train_instances(train, num_negatives):
         item_input.append(i)
         labels.append(1)
         # negative instances
-        for t in xrange(num_negatives):
+        for t in range(num_negatives):
             j = np.random.randint(num_items)
             while train.has_key((u, j)):
                 j = np.random.randint(num_items)
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     topK = 10
     evaluation_threads = 1  # mp.cpu_count()
     print("GMF arguments: %s" % args)
-    model_out_file = 'Pretrain/%s_GMF_%d_%d.h5' % (args.dataset, num_factors, time())
+    model_out_file = '../Pretrain/%s_GMF_%d_%d.h5' % (args.dataset, num_factors, time())
 
     # Loading Data
     t1 = time()
@@ -153,7 +153,7 @@ if __name__ == '__main__':
         # Training
         hist = model.fit([np.array(user_input), np.array(item_input)],  # input
                          np.array(labels),  # labels
-                         batch_size=batch_size, nb_epoch=1, verbose=0, shuffle=True)
+                         batch_size=batch_size, epochs=1, verbose=0, shuffle=True)
         t2 = time()
 
         # Evaluation
