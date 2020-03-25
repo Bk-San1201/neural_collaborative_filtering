@@ -14,7 +14,7 @@ from tensorflow.keras.layers import Input, Embedding, Flatten, Multiply, Dense
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras import Model
 from time import time
-
+from tensorflow.keras.optimizers import Adam, SGD
 from src.Dataset import Dataset
 from src.evaluate import evaluate_model
 
@@ -49,9 +49,6 @@ def parse_arg():
     return parser.parse_args()
 
 
-def init_normal(shape, name=None):
-    return initializers.he_normal(seed=None)
-
 
 def get_model(num_users, num_items, latent_dim, regs=[0, 0]):
     # Input variables
@@ -59,9 +56,11 @@ def get_model(num_users, num_items, latent_dim, regs=[0, 0]):
     item_input = Input(shape=(1,), dtype='int32', name='item_input')
 
     MF_Embedding_User = Embedding(input_dim=num_users, output_dim=latent_dim, name='user_embedding',
-                                  embeddings_initializer=init_normal, embeddings_regularizer=l2(regs[0]), input_length=1)
+                                  embeddings_initializer=initializers.he_normal(),
+                                  embeddings_regularizer=l2(regs[0]), input_length=1)
     MF_Embedding_Item = Embedding(input_dim=num_items, output_dim=latent_dim, name='item_embedding',
-                                  embeddings_initializer=init_normal, embeddings_regularizer=l2(regs[1]), input_length=1)
+                                  embeddings_initializer=initializers.he_normal(),
+                                  embeddings_regularizer=l2(regs[1]), input_length=1)
 
     # Crucial to flatten an embedding vector!
     user_latent = Flatten()(MF_Embedding_User(user_input))
@@ -75,7 +74,7 @@ def get_model(num_users, num_items, latent_dim, regs=[0, 0]):
 
     prediction = Dense(units=1, activation='sigmoid', kernel_initializer='lecun_uniform')(predict_vector)
 
-    model = Model(input=[user_input, item_input], output=prediction)
+    model = Model(inputs=[user_input, item_input], outputs=prediction)
 
     return model
 

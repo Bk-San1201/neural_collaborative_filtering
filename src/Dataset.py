@@ -33,7 +33,7 @@ class Dataset(object):
         mat = sp.dok_matrix((num_users + 1, num_items + 1), dtype=np.float32)
         for i in range(len(user_col)):
             if rating_col[i] > 0:
-                mat[user_col[i], item_col] = 1.0
+                mat[user_col[i], item_col[i]] = 1.0
         return mat
 
     def load_rating_file_as_list(self, filename):
