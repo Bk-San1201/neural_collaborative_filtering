@@ -21,7 +21,8 @@ from evaluate import evaluate_model
 from Dataset import Dataset
 from time import time
 import sys
-import GMF, MLP
+import GMF
+from old_src import MLP
 import argparse
 
 #################### Arguments ####################
@@ -193,7 +194,7 @@ if __name__ == '__main__':
     if mf_pretrain != '' and mlp_pretrain != '':
         gmf_model = GMF.get_model(num_users,num_items,mf_dim)
         gmf_model.load_weights(mf_pretrain)
-        mlp_model = MLP.get_model(num_users,num_items, layers, reg_layers)
+        mlp_model = MLP.get_model(num_users, num_items, layers, reg_layers)
         mlp_model.load_weights(mlp_pretrain)
         model = load_pretrain_model(model, gmf_model, mlp_model, len(layers))
         print("Load pretrained GMF (%s) and MLP (%s) models done. " %(mf_pretrain, mlp_pretrain))

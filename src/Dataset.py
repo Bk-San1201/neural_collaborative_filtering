@@ -54,3 +54,6 @@ class Dataset(object):
         return negativeList
 
 
+if __name__ == '__main__':
+    dataset = Dataset('../Data/ml-1m')
+    print(dataset.testRatings.shape)
