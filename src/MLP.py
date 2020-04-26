@@ -66,15 +66,15 @@ def get_model(num_users, num_items, layers=[20, 10], reg_layers=[0, 0]):
     user_latent = Flatten()(MLP_Embedding_User(user_input))
     item_latent = Flatten()(MLP_Embedding_Item(item_input))
     # The 0-th layer is the concatenation of embedding layers
-    vector = tf.concat([user_latent, item_latent], axis=0)
+    vector = tf.concat([user_latent, item_latent], axis=1)
 
     # MLP layers
     for idx in range(1, num_layer):
-        vector = Dense(layers[idx], activation='sigmoid', kernel_initializer='lecun_uniform')(
+        vector = Dense(layers[idx], activation='sigmoid', kernel_initializer='lecun_uniform', name="layer%d" % idx)(
             vector)
 
     # Final prediction layer
-    prediction = Dense(1, activation='sigmoid', kernel_initializer='lecun_uniform')(vector)
+    prediction = Dense(1, activation='sigmoid', kernel_initializer='lecun_uniform', name="prediction")(vector)
 
     model = Model(inputs=[user_input, item_input],
                   outputs=prediction)
@@ -85,6 +85,7 @@ def get_model(num_users, num_items, layers=[20, 10], reg_layers=[0, 0]):
 def get_train_instances(train, num_negatives):
     user_input, item_input, labels = [], [], []
     num_users = train.shape[0]
+    num_items = train.shape[1]
     for (u, i) in train.keys():
         # positive instance
         user_input.append(u)

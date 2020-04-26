@@ -49,7 +49,6 @@ def parse_arg():
     return parser.parse_args()
 
 
-
 def get_model(num_users, num_items, latent_dim, regs=[0, 0]):
     # Input variables
     user_input = Input(shape=(1,), dtype='int32', name='user_input')
@@ -69,10 +68,10 @@ def get_model(num_users, num_items, latent_dim, regs=[0, 0]):
     # Element-wise product of user and item embeddings
     predict_vector = Multiply()([user_latent, item_latent])
 
-    # Final prediction layer
+    # Final prediction layers
     # prediction = Lambda(lambda x: K.sigmoid(K.sum(x)), output_shape=(1,))(predict_vector)
 
-    prediction = Dense(units=1, activation='sigmoid', kernel_initializer='lecun_uniform')(predict_vector)
+    prediction = Dense(units=1, activation='sigmoid', kernel_initializer='lecun_uniform', name='prediction')(predict_vector)
 
     model = Model(inputs=[user_input, item_input], outputs=prediction)
 
@@ -170,14 +169,3 @@ if __name__ == '__main__':
     print("End. Best Iteration %d:  HR = %.4f, NDCG = %.4f. " % (best_iter, best_hr, best_ndcg))
     if args.out > 0:
         print("The best GMF model is saved to %s" % model_out_file)
-
-
-
-
-
-
-
-
-
-
-
